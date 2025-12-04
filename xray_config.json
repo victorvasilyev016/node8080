@@ -1,0 +1,94 @@
+{
+    "log": {
+        "loglevel": "info",
+        "access": "/app/xray.log",
+        "error": "/app/xray_errors.log"
+    },
+    "dns": {
+        "servers": [
+            {
+                "address": "https://8.8.8.8/dns-query",
+                "skipFallback": true
+            }
+        ],
+        "outbound": "dns-out",
+        "disableCache": false,
+        "queryStrategy": "UseIP",
+        "disableFallback": true,
+        "disableFallbackIfMatch": true
+    },
+    "inbounds": [
+        {
+            "tag": "Railway",
+            "listen": "0.0.0.0",
+            "port": 2099,
+            "protocol": "vless",
+            "settings": {
+                "clients": [],
+                "decryption": "none"
+            },
+            "streamSettings": {
+                "network": "ws",
+                "security": "none",
+                "wsSettings": {
+                    "path": "/",
+                    "headers": {}
+                }
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "tag": "DIRECT"
+        },
+        {
+            "protocol": "blackhole",
+            "tag": "BLOCK"
+        },
+        {
+            "tag": "dns-out",
+            "protocol": "freedom",
+            "settings": {}
+        }
+    ],
+    "routing": {
+        "rules": [
+            {
+                "type": "field",
+                "ip": [
+                    "95.85.96.0/19",
+                    "95.85.96.0/24",
+                    "95.85.98.0/24",
+                    "95.85.99.0/24",
+                    "95.85.100.0/22",
+                    "95.85.100.0/24",
+                    "95.85.101.0/24",
+                    "95.85.104.0/22",
+                    "95.85.104.0/24",
+                    "95.85.121.0/24",
+                    "103.220.0.0/22",
+                    "119.235.112.0/20",
+                    "177.93.143.0/24",
+                    "185.69.184.0/24",
+                    "216.250.8.0/21",
+                    "217.174.224.0/20",
+                    "93.171.220.0/22",
+                    "93.171.220.0/24",
+                    "93.171.221.0/24",
+                    "93.171.222.0/24",
+                    "93.171.223.0/24",
+                    "185.69.185.0/24"
+                ],
+                "outboundTag": "DIRECT"
+            },
+            {
+                "type": "field",
+                "protocol": [
+                    "bittorrent"
+                ],
+                "outboundTag": "BLOCK"
+            }
+        ]
+    }
+}
